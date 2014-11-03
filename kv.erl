@@ -30,24 +30,24 @@ server(T) ->
 
 insert(K,V,leaf) ->
   {node,leaf,K,V,leaf};
-insert(K,V,{node,L,KN,_VN,R}) ->
+insert(K,V,{node,L,KN,VN,R}) ->
   if K<KN ->
-      insert(K,V,L);
+      {node, insert(K,V,L), KN, VN, R};
      K==KN ->
       {node,L,K,V,R};
      K>KN ->
-      insert(K,V,R)
+      {node,L,KN,VN,insert(K,V,R)}
   end.
 
 lookup(_,leaf) ->
   false;
 lookup(K,{node,L,KN,VN,R}) ->
   if K<KN ->
-      lookup(K,R);
+      lookup(K,L);
      K==KN ->
       {K,VN};
      K>KN ->
-      lookup(K,L)
+      lookup(K,R)
   end.
 
 %% State machine
